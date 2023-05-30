@@ -30,8 +30,8 @@ Route::post('/create_patient', [App\Http\Controllers\PatientController::class, '
 Route::post('/update_patient', [App\Http\Controllers\PatientController::class, 'updatePatient']);
 Route::get('/get_patient/{id}', [App\Http\Controllers\PatientController::class, 'getPatientById']);
 Route::get('/get_all_patients', [App\Http\Controllers\PatientController::class, 'getAllPatients']);
-
-
+Route::get('/count_patients_per_brgy', [App\Http\Controllers\PatientController::class, 'countPatientsPerBrgy']);
+Route::get('/search_patient/{search_data}', [App\Http\Controllers\PatientController::class, 'searchPatient']);
 
 //Medical Records
 Route::get('/get_all_patient_medical_record/{id}', [App\Http\Controllers\PatientMedicalRecordController::class, 'getAllPatienMedRecordsById']);

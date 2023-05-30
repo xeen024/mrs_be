@@ -42,6 +42,7 @@ class Patient extends Model
                                 'personal_information.age',
                                 'personal_information.contact_number',
                                 'personal_information.civil_status',
+                                
                                 DB::raw("CONCAT(addresses.street,' ',
                                 addresses.brgy,' ',
                                 addresses.city,' ',
@@ -50,6 +51,33 @@ class Patient extends Model
                                 'personal_information.religion'
                                 )->join('addresses', 'addresses.id', 'patients.address_id')
                                 ->join('personal_information', 'personal_information.id', 'patients.personal_info_id')
+                                ->orderBy('id', 'desc')
+                                 ->get();
+
+        return $all_patient_data;
+    }
+
+    public function search($searh_data){
+        // $all_patient_data = Patient::all();
+        $all_patient_data = DB::table('patients')->select('patients.id',
+                                'personal_information.firstname',
+                                'personal_information.lastname',
+                                'personal_information.gender',
+                                'personal_information.birthdate',
+                                'personal_information.age',
+                                'personal_information.contact_number',
+                                'personal_information.civil_status',
+                                DB::raw("CONCAT(addresses.street,' ',
+                                addresses.brgy,' ',
+                                addresses.city,' ',
+                                addresses.province,' ',
+                                addresses.country)AS Address"),
+                                'personal_information.religion'
+                                )->join('addresses', 'addresses.id', 'patients.address_id')
+                                ->join('personal_information', 'personal_information.id', 'patients.personal_info_id')
+                                ->where('personal_information.firstname', 'LIKE', '%'.$searh_data.'%')
+                                ->orWhere('personal_information.lastname', 'LIKE', '%'.$searh_data.'%')
+                                ->orderBy('id', 'desc')
                                  ->get();
 
         return $all_patient_data;

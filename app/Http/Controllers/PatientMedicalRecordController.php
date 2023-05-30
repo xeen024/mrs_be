@@ -59,7 +59,7 @@ class PatientMedicalRecordController extends Controller
     }
 
     public function getAllPatienMedRecordsById($id){
-        $records = PatientMedicalRecord::where('patient_id',$id)->get();
+        $records = PatientMedicalRecord::where('patient_id',$id)->orderBy('id', 'desc')->get();
 
         // return $records;
         $all_records = [];

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 use App\Models\Address;
 use App\Models\PersonalInformation;
 use App\Models\Patient;
-
+use App\Models\User;
+use App\Models\PatientMedicalRecord;
+use DB;
 use Illuminate\Http\Request;
 
 class PatientController extends Controller
@@ -76,5 +78,47 @@ class PatientController extends Controller
         ];
     }
 
+    public function countPatientsPerBrgy(){
+        $barangays = ['Busaon','Carugmanan', 'Gastav', 'Kalawaig', 'Kiaring','Malagap','Malinao','Miguel Macasarte','Pantar',
+        'Paradise','Pinamulaan','Poblacion I','Poblacion II','Puting-bato','Salama','Thailand','Tinimbacan','Tumbao-Camalig','Wadya'];
 
+        $labels = [];
+        $count_of_brgys = [];
+        
+        foreach ($barangays as $brgy) {
+            $no_of_brgy = DB::table('patients')->select('patients.id','patients.address_id')
+                                        ->join('addresses', 'addresses.id', 'patients.address_id')
+                                        ->where('addresses.brgy', $brgy)
+                                        ->get();
+            $no_of_brgy = $no_of_brgy->count();
+            $labels[] = (string)$brgy;
+            $count_of_brgys[] = $no_of_brgy;
+        }
+        
+        $no_of_patients = Patient::count();
+        $no_of_medical_records = PatientMedicalRecord::count();
+        $no_of_users = User::count();
+
+        return [
+            'success' => true,
+            'result' => [
+                'labels' => $labels,
+                'count_of_brgys' => $count_of_brgys,
+                'no_of_patients' => $no_of_patients,
+                'no_of_users' => $no_of_users,
+                'no_of_medical_records' => $no_of_medical_records
+            ]
+        ];
+    }
+
+    public function searchPatient($search_data){
+        $patient = new Patient;
+
+        $get_all_data = $patient->search($search_data);
+
+        return [
+            'success' => true,
+            'results' => $get_all_data
+        ];
+    }
 }
